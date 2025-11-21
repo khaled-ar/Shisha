@@ -32,7 +32,7 @@ class StoreEmployeeRequest extends FormRequest
             'phone' => ['required', 'string', 'unique:users,phone'],
             'front_id_image' => ['required', 'image', 'mimes:png,jpg'],
             'back_id_image' => ['required', 'image', 'mimes:png,jpg'],
-            'section' => ['required', 'string', 'in:products,parties'],
+            'section' => ['required', 'string', 'in:products,parties,driver'],
             'password' => ['required', 'string', Password::min(8)->max(25)],
         ];
     }

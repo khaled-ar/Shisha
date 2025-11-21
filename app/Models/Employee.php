@@ -19,6 +19,11 @@ class Employee extends Model
         'front_id_image_url',
     ];
 
+    public function scopeSection($query) {
+        $section = request('section');
+        return $section ? $query->whereSection($section) : $query;
+    }
+
     public function user() {
         return $this->belongsTo(User::class)->select([
             'id', 'image', 'name', 'phone'

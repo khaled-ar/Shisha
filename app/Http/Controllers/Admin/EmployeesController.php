@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\Employee\UpdateEmployeeRequest;
-use App\Http\Requests\Admin\Employees\StoreEmployeeRequest;
+use App\Http\Requests\Admin\Employees\{
+    UpdateEmployeeRequest,
+    StoreEmployeeRequest
+};
 use App\Models\Employee;
 use Illuminate\Http\Request;
 
@@ -15,7 +17,8 @@ class EmployeesController extends Controller
      */
     public function index()
     {
-        $employees = Employee::with('user')->get()->map(function($employee) {
+
+        $employees = Employee::section()->with('user')->get()->map(function($employee) {
             return [
                 'id' => $employee->id,
                 'name' => $employee->user->name,

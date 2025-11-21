@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Admin\Employee;
+namespace App\Http\Requests\Admin\Employees;
 
 use App\Traits\Files;
 use Illuminate\Foundation\Http\FormRequest;
@@ -29,7 +29,7 @@ class UpdateEmployeeRequest extends FormRequest
             'phone' => ['string', 'unique:users,phone'],
             'front_id_image' => ['image', 'mimes:png,jpg'],
             'back_id_image' => ['image', 'mimes:png,jpg'],
-            'section' => ['string', 'in:products,parties'],
+            'section' => ['string', 'in:products,parties,driver'],
         ];
     }
 
