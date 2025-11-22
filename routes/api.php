@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\StatisticsController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
@@ -15,5 +16,10 @@ Route::middleware('auth:sanctum')->group(function() use($base_path) {
         include "{$admin_path}/stores.php";
         include "{$admin_path}/employees.php";
         include "{$admin_path}/categories.php";
+        include "{$admin_path}/users.php";
+        include "{$admin_path}/products.php";
+        include "{$admin_path}/ads.php";
+        include "{$admin_path}/prices.php";
+        Route::get('statistics', [StatisticsController::class, 'index']);
     });
 });
