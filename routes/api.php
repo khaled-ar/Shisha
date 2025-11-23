@@ -9,7 +9,14 @@ $base_path = base_path('routes');
 // Auth Routes
 include "{$base_path}/auth.php";
 
-Route::middleware('auth:sanctum')->group(function() use($base_path) {
+Route::middleware(['auth:sanctum', 'whatsapp_verified'])->group(function() use($base_path) {
+
+    // User Routes
+    include "{$base_path}/user_routes.php";
+
+    // Employee Products Routes
+    include "{$base_path}/employee_products_routes.php";
+
     // Admin Routes
     $admin_path = "{$base_path}/Admin";
     Route::prefix('admin')->middleware('admin')->group(function() use($admin_path) {

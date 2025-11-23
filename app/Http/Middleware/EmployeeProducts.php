@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class User
+class EmployeeProducts
 {
     /**
      * Handle an incoming request.
@@ -15,7 +15,7 @@ class User
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if($request->user()->role != 'user') {
+        if($request->user()->role != 'employee-products') {
             return response()->json([
                 'message' => __('responses.error_403')
             ], 403);

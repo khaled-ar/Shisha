@@ -21,5 +21,6 @@ return [
     'The request has been sent to the manager successfully.' => 'The request has been sent to the manager successfully.',
     'No more than three posts can be added.' => 'No more than three posts can be added.',
     'You cannot book an appointment because you already have one. Please wait two days from the date of your current appointment.' => 'You cannot book an appointment because you already have one. Please wait two days from the date of your current appointment.',
-    'Editing is not possible while awaiting manager approval.' => 'Editing is not possible while awaiting manager approval.'
+    'Editing is not possible while awaiting manager approval.' => 'Editing is not possible while awaiting manager approval.',
+    'The order cannot be cancelled as it is in delivery.' => 'The order cannot be cancelled as it is in delivery.'
 ];

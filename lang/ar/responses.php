@@ -21,5 +21,6 @@ return [
     'The request has been sent to the manager successfully.' => 'تم ارسال طلب الاشتراك الى الى المسؤول بنجاح',
     'No more than three posts can be added.' => 'لا يمكن اضافة اكثر من ثلاثة منشورات',
     'You cannot book an appointment because you already have one. Please wait two days from the date of your current appointment.' => 'لا يمكن حجز موعد لانه لديك موعد بالفعل، يرجى الانتظار يومين من تاريخ حجز الموعد الحالي',
-    'Editing is not possible while awaiting manager approval.' => 'لا يمكن التعديل في حالة انتظار الموافقة من المدير'
+    'Editing is not possible while awaiting manager approval.' => 'لا يمكن التعديل في حالة انتظار الموافقة من المدير',
+    'The order cannot be cancelled as it is in delivery.' => 'لا يمكن الغاء الطلب لانه قيد التوصيل'
 ];

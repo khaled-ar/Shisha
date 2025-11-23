@@ -34,6 +34,14 @@ class Category extends Model
         return $query;
     }
 
+    public function children() {
+        return $this->hasMany(Category::class, 'parent_id')->with(['children', 'products']);
+    }
+
+    public function products() {
+        return $this->hasMany(Product::class);
+    }
+
     public function getLogoUrlAttribute()
     {
         return $this->logo ? asset("Images/Logos") . '/' . $this->logo : null;
