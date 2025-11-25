@@ -48,7 +48,8 @@ class LoginRequest extends FormRequest
             $user['token'] = $user->createToken('auth_token')->plainTextToken;
             return $this->generalResponse([
                 'token' => $user->token,
-                'phone_verified_at' => $user->phone_verified_at
+                'phone_verified_at' => $user->phone_verified_at,
+                'role' => $user->role,
             ], null, 200);
         }
         return $this->generalResponse(null, 'Wrong Credentials', 401);

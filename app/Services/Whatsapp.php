@@ -11,15 +11,15 @@ use Illuminate\Support\Facades\{
 class Whatsapp {
 
     public static function send_code($number) {
-
+/*return json_decode(static::check_limit());
         $can_send_message = json_decode(static::check_limit())->data->can_send_message;
         if(! $can_send_message) {
             return false;
-        }
+        }*/
 
         $code = substr(str_shuffle('0123456789'), 0, 5);
 
-        $response = Http::withoutVerifying()->withHeaders([
+        $response = Http::withHeaders([
             'Accept' => 'application/json',
             'Content-Type' => 'application/json',
             'x-api-key' => config('services.whatsapp_api_key')
@@ -41,7 +41,7 @@ class Whatsapp {
 
     public static function check_limit() {
 
-        $response = Http::withoutVerifying()->withHeaders([
+        $response = Http::withHeaders([
             'Accept' => 'application/json',
             'x-api-key' => config('services.whatsapp_api_key')
         ])
