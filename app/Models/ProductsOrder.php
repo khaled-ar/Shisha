@@ -14,7 +14,9 @@ class ProductsOrder extends Model
     protected $guarded = ['status'];
 
     public function product() {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class)->select([
+            'id', 'title', 'price', 'images', 'quantity'
+        ]);
     }
 
     public function user() {

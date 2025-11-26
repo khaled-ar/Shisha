@@ -1,0 +1,65 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\PartiesOrder;
+use Illuminate\Http\Request;
+
+class PartiesOrdersController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $status = request('status') ?? "pending";
+        return $this->generalResponse(PartiesOrder::latest()
+                                ->whereStatus($status)
+                                ->with(['user' => function ($query) use ($status) {
+                                    if ($status != 'canceled') {
+                                        $query->whereRaw('1 = 0');
+                                    }
+                                }])->get()
+                    );
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, PartiesOrder $parties_order)
+    {
+        $status = $request->status;
+        if($status == 'pending') {
+            return $this->generalResponse(null, null, 400);
+        }
+
+        $parties_order->forceFill(['status' => $status]);
+        $parties_order->save();
+        return $this->generalResponse(null);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
+    }
+}

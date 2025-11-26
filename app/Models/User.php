@@ -52,6 +52,14 @@ class User extends Authenticatable
         return $this->hasOne(Employee::class);
     }
 
+    public function parties_orders() {
+        return $this->hasMany(PartiesOrder::class);
+    }
+
+    public function products_orders() {
+        return $this->hasMany(ProductsOrder::class);
+    }
+
     public function getImageUrlAttribute()
     {
         return $this->image ? asset("Images/Users") . '/' . $this->image : null;

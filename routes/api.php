@@ -17,6 +17,9 @@ Route::middleware(['auth:sanctum', 'whatsapp_verified'])->group(function() use($
     // Employee Products Routes
     include "{$base_path}/employee_products_routes.php";
 
+    // Employee Parties Routes
+    include "{$base_path}/employee_parties_routes.php";
+
     // Admin Routes
     $admin_path = "{$base_path}/Admin";
     Route::prefix('admin')->middleware('admin')->group(function() use($admin_path) {
@@ -27,6 +30,7 @@ Route::middleware(['auth:sanctum', 'whatsapp_verified'])->group(function() use($
         include "{$admin_path}/products.php";
         include "{$admin_path}/ads.php";
         include "{$admin_path}/prices.php";
+        include "{$admin_path}/parties_orders.php";
         Route::get('statistics', [StatisticsController::class, 'index']);
     });
 });

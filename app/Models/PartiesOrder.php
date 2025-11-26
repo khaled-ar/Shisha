@@ -12,4 +12,8 @@ class PartiesOrder extends Model
     ];
 
     protected $guarded = ['status'];
+
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
 }

@@ -34,7 +34,10 @@ Route::middleware('user')->group(function() {
     });
 
     Route::apiResource('products-orders', ProductsOrdersController::class);
+    Route::post('products-orders/confirm', [ProductsOrdersController::class, 'confirm']);
     Route::apiResource('parties-orders', PartiesOrdersController::class);
+    Route::post('parties-orders/confirm/{parties_order}', [PartiesOrdersController::class, 'confirm']);
+
 
 });
 

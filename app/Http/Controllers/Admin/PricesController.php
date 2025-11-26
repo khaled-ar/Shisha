@@ -22,7 +22,7 @@ class PricesController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'object' => ['required', 'string', 'in:singe_hookah,single_hour,single_person', 'unique:prices,object'],
+            'object' => ['required', 'string', 'in:single_hookah,single_hour,single_person', 'unique:prices,object'],
             'price' => ['required', 'string']
         ]);
         Price::create($data);

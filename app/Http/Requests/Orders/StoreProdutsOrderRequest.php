@@ -2,9 +2,12 @@
 
 namespace App\Http\Requests\Orders;
 
-use App\Models\Product;
-use App\Models\ProductsOrder;
+use App\Models\{
+    Product,
+    ProductsOrder,
+};
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\DB;
 
 class StoreProdutsOrderRequest extends FormRequest
 {
@@ -37,11 +40,13 @@ class StoreProdutsOrderRequest extends FormRequest
     }
 
     public function store() {
-        ProductsOrder::create(array_merge($this->validated(), [
-            'user_id' => $this->user()->id,
-            'total' => $this->quantity * $this->product->price,
-        ]));
-
-        return $this->generalResponse(null, '201', 201);
+        return DB::transaction(function () {
+            ProductsOrder::create(array_merge($this->validated(), [
+                'user_id' => $this->user()->id,
+                'total' => $this->quantity * $this->product->price,
+            ]));
+            $this->product->decrement('quantity', $this->quantity);
+            return $this->generalResponse(null, '201', 201);
+        });
     }
 }

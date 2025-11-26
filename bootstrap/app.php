@@ -32,6 +32,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias(array_merge($currentAliases, [
             'admin' => \App\Http\Middleware\Admin::class,
             'employee_products' => \App\Http\Middleware\EmployeeProducts::class,
+            'employee_parties' => \App\Http\Middleware\EmployeeParties::class,
             'user' => \App\Http\Middleware\User::class,
             // 'lang' => \App\Http\Middleware\Lang::class,
             'whatsapp_verified' => \App\Http\Middleware\EnsureWhatsappIsVerified::class

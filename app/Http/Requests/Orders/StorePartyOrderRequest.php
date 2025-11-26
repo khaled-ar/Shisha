@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests\Orders;
 
-use App\Models\PartiesOrder;
-use App\Models\Price;
-use App\Models\Store;
+use App\Models\{
+    PartiesOrder,
+    Price,
+    Store
+};
 use Illuminate\Foundation\Http\FormRequest;
 
 class StorePartyOrderRequest extends FormRequest
@@ -27,7 +29,7 @@ class StorePartyOrderRequest extends FormRequest
         return [
             'hookahs' => ['required', 'integer'],
             'hours' => ['required', 'numeric'],
-            'persons' => ['required', 'integer'],
+            'persons' => ['integer'],
             'description' => ['nullable', 'string'],
             'datetime' => ['required', 'string'],
             'lon' => ['required', 'string'],
@@ -43,13 +45,13 @@ class StorePartyOrderRequest extends FormRequest
 
         $order = PartiesOrder::create(array_merge($this->except('km_distance'), [
             'user_id' => $this->user()->id,
-            'total' => $prices['singe_hookah'] * $this->hookahs
+            'total' => $prices['single_hookah'] * $this->hookahs
                 + $prices['single_hour'] * $this->hours
                 + $prices['single_person'] * $this->persons
                 + $delivery_cost,
+            'delivery_cost' => $delivery_cost,
             ])
         );
-        $order->delivery_cost = $delivery_cost;
-        return $this->generalResponse($order, '201', 201);
+        return $this->generalResponse(null, '201', 201);
     }
 }

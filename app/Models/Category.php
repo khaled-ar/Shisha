@@ -31,6 +31,9 @@ class Category extends Model
         } elseif($parent && $parent == 'no') {
             $query->whereNotNull('parent_id');
         }
+        if(request('parent_id')) {
+            $query->whereParentId(request('parent_id'));
+        }
         return $query;
     }
 
