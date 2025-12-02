@@ -45,9 +45,11 @@ class Employee extends Model
         parent::boot();
 
         static::created(function($employee) {
-            $employee->front_id_image = Files::moveFile(request('front_id_image'), "Images/Users");
-            $employee->back_id_image = Files::moveFile(request('back_id_image'), "Images/Users");
-            $employee->save();
+            if(request('front_id_image') && request('back_id_image')) {
+                $employee->front_id_image = Files::moveFile(request('front_id_image'), "Images/Users");
+                $employee->back_id_image = Files::moveFile(request('back_id_image'), "Images/Users");
+                $employee->save();
+            }
         });
 
         static::deleting(function($employee) {

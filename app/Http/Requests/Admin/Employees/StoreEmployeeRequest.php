@@ -30,9 +30,9 @@ class StoreEmployeeRequest extends FormRequest
             'name' => ['required', 'string', 'max:100'],
             'image' => ['required', 'image', 'mimes:png,jpg'],
             'phone' => ['required', 'string', 'unique:users,phone'],
-            'front_id_image' => ['required', 'image', 'mimes:png,jpg'],
-            'back_id_image' => ['required', 'image', 'mimes:png,jpg'],
             'section' => ['required', 'string', 'in:products,parties,driver'],
+            'front_id_image' => ['required_if:section,driver', 'image', 'mimes:png,jpg'],
+            'back_id_image' => ['required_if:section,driver', 'image', 'mimes:png,jpg'],
             'password' => ['required', 'string', Password::min(8)->max(25)],
         ];
     }
