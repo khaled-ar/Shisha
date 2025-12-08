@@ -27,6 +27,9 @@ Route::middleware('user')->group(function() {
     Route::get('parties-prices', function() {
         return response()->json(['message' => null, 'data' => Price::all()]);
     });
+});
+
+Route::middleware(['auth:sanctum', 'whatsapp_verified'])->group(function() {
 
     Route::controller(ProfileController::class)->group(function() {
         Route::get('profile', 'show');
@@ -37,7 +40,6 @@ Route::middleware('user')->group(function() {
     Route::post('products-orders/confirm', [ProductsOrdersController::class, 'confirm']);
     Route::apiResource('parties-orders', PartiesOrdersController::class);
     Route::post('parties-orders/confirm/{parties_order}', [PartiesOrdersController::class, 'confirm']);
-
 
 });
 
