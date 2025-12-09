@@ -11,25 +11,27 @@ use App\Models\{
 };
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('user')->group(function() {
-    Route::get('ads', function() {
-        return response()->json(['message' => null, 'data' => Ad::latest()->paginate(5)]);
-    });
-
-    Route::get('categories', function() {
-        return response()->json(['message' => null, 'data' => Category::latest()->with('children')->get()]);
-    });
-
-    Route::get('products', function() {
-        return response()->json(['message' => null, 'data' => Product::latest()->limit(10)->get()]);
-    });
-
-    Route::get('parties-prices', function() {
-        return response()->json(['message' => null, 'data' => Price::all()]);
-    });
+Route::get('ads', function() {
+    return response()->json(['message' => null, 'data' => Ad::latest()->paginate(5)]);
 });
 
-Route::middleware(['auth:sanctum', 'whatsapp_verified'])->group(function() {
+Route::get('categories', function() {
+    return response()->json(['message' => null, 'data' => Category::latest()->with('children')->get()]);
+});
+
+Route::get('products', function() {
+    return response()->json(['message' => null, 'data' => Product::latest()->limit(10)->get()]);
+});
+
+Route::get('parties-prices', function() {
+    return response()->json(['message' => null, 'data' => Price::all()]);
+});
+
+Route::middleware('user')->group(function() {
+
+});
+
+Route::middleware(['auth:sanctum', 'user', 'whatsapp_verified'])->group(function() {
 
     Route::controller(ProfileController::class)->group(function() {
         Route::get('profile', 'show');
