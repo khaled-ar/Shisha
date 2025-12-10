@@ -12,7 +12,7 @@ include "{$base_path}/auth.php";
 // User Routes
 include "{$base_path}/user_routes.php";
 
-Route::middleware(['auth:sanctum', /*'whatsapp_verified'*/])->group(function() use($base_path) {
+Route::middleware(['auth:sanctum', 'whatsapp_verified'])->group(function() use($base_path) {
 
     // Employee Products Routes
     include "{$base_path}/employee_products_routes.php";
