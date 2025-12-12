@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('quantity');
             $table->float('total', 1)->default(0);
             $table->string('status')->default('pending');
-            $table->unique(['user_id', 'product_id']);
+            // $table->unique(['user_id', 'product_id']);
             $table->timestamps();
         });
     }
