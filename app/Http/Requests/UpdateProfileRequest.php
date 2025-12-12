@@ -27,11 +27,10 @@ class UpdateProfileRequest extends FormRequest
     {
         return [
             'name' => ['string', 'max:100'],
-            'phone' => ['string', 'unique:users,phone'],
             'lon' => ['string', 'max:50'],
             'lat' => ['string', 'max:50'],
             'image' => ['image', 'mimes:png,jpg'],
-            'password' => ['required', 'string', Password::min(8)->max(25)],
+            'password' => ['string', Password::min(8)->max(25)],
         ];
     }
 
