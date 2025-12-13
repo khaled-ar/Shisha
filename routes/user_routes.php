@@ -8,6 +8,7 @@ use App\Models\{
     Category,
     Price,
     Product,
+    Store,
 };
 use Illuminate\Support\Facades\Route;
 
@@ -24,7 +25,8 @@ Route::get('products', function() {
 });
 
 Route::get('parties-prices', function() {
-    return response()->json(['message' => null, 'data' => Price::all()]);
+    $store = Store::first();
+    return response()->json(['message' => null, 'store_lon' => $store->lon, 'store_lat' => $store->lat, 'data' => Price::all()]);
 });
 
 Route::middleware('user')->group(function() {

@@ -8,6 +8,7 @@ use App\Http\Requests\Orders\{
     UpdateProdutsOrderRequest,
 };
 use App\Models\ProductsOrder;
+use App\Models\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -19,6 +20,7 @@ class ProductsOrdersController extends Controller
     public function index()
     {
         $user = request()->user();
+        $store = Store::first();
         $status = request('status') ?? "pending";
         $orders = $user->products_orders()->whereStatus($status)->with('product')->get();
         $first = $status == 'pending' ? null : ($orders[0] ?? null);
@@ -30,6 +32,8 @@ class ProductsOrdersController extends Controller
             'delivery_cost' => $first?->delivery_cost,
             'user_lon' => $user->lon,
             'user_lat' => $user->lat,
+            'store_lon' => $store->lon,
+            'store_lat' => $store->lat,
             'orders' => $orders
         ]);
     }
