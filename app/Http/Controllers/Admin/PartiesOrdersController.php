@@ -16,11 +16,7 @@ class PartiesOrdersController extends Controller
         $status = request('status') ?? "pending";
         return $this->generalResponse(PartiesOrder::latest()
                                 ->whereStatus($status)
-                                ->with(['user' => function ($query) use ($status) {
-                                    if ($status != 'canceled') {
-                                        $query->whereRaw('1 = 0');
-                                    }
-                                }])->get()
+                                ->with('user')->get()
                     );
     }
 
