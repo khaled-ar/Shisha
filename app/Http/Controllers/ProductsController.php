@@ -17,7 +17,7 @@ class ProductsController extends Controller
      */
     public function index()
     {
-        return $this->generalResponse(Product::all());
+        return $this->generalResponse(Product::whereCategoryId(request('category_id'))->latest()->paginate(10));
     }
 
     /**
