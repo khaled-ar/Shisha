@@ -50,6 +50,8 @@ class LoginRequest extends FormRequest
                 'token' => $user->token,
                 'phone_verified_at' => $user->phone_verified_at,
                 'role' => $user->role,
+                'lon' => $user->lon,
+                'lat' => $user->lat,
             ], null, 200);
         }
         return $this->generalResponse(null, 'Wrong Credentials', 401);

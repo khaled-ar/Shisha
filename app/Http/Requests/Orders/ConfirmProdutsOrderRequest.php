@@ -23,7 +23,7 @@ class ConfirmProdutsOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'km_distance' => ['required', 'integer'],
+            'km_distance' => ['required', 'numeric'],
             'lon' => ['required', 'string'],
             'lat' => ['required', 'string'],
         ];

@@ -34,7 +34,7 @@ class StorePartyOrderRequest extends FormRequest
             'datetime' => ['required', 'string'],
             'lon' => ['required', 'string'],
             'lat' => ['required', 'string'],
-            'km_distance' => ['required', 'integer']
+            'km_distance' => ['required', 'numeric']
         ];
     }
 
