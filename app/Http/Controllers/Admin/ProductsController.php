@@ -18,9 +18,9 @@ class ProductsController extends Controller
     public function index()
     {
         if(request('category_id')) {
-            return $this->generalResponse(Product::whereCategoryId(request('category_id'))->get());
+            return $this->generalResponse(Product::whereCategoryId(request('category_id'))->latest()->paginate(10));
         }
-        return $this->generalResponse(Product::all());
+        return $this->generalResponse(Product::latest()->paginate(10));
     }
 
     /**
