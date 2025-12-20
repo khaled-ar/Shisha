@@ -36,7 +36,7 @@ class UpdateProductRequest extends FormRequest
 
     public function update($product) {
         return DB::transaction(function() use($product) {
-            $product->update($this->except('images'));
+            $product->update($this->validated());
             return $this->generalResponse(null, 'Updated Successfully', 200);
         });
     }

@@ -35,7 +35,7 @@ class Product extends Model
                 $images[] = Files::moveFile($image, "Images/Products");
             }
             $product->images = implode('|', $images);
-            $product->saveQuietly(); // This won't trigger events
+            $product->saveQuietly();
         });
 
         static::deleting(function($product) {
@@ -46,9 +46,11 @@ class Product extends Model
 
         static::updated(function($product) {
             if(request('images')) {
-                collect(explode("|", $product->images))->map(function ($image) {
-                    Files::deleteFile(public_path("Images/Products/{$image}"));
-                });
+                if($product->images && is_string($product->images)) {
+                    collect(explode("|", $product->images))->map(function ($image) {
+                        Files::deleteFile(public_path("Images/Products/{$image}"));
+                    });
+                }
 
                 $images = [];
                 foreach(request('images') as $image) {
