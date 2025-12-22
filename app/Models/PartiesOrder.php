@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class PartiesOrder extends Model
 {
     protected $hidden = [
-        'created_at',
         'updated_at',
     ];
 
@@ -15,5 +14,9 @@ class PartiesOrder extends Model
 
     public function user() {
         return $this->belongsTo(User::class);
+    }
+
+    public function getCreatedAtAttribute($value) {
+        return \Carbon\Carbon::parse($value)->format('Y-m-d h:i');
     }
 }

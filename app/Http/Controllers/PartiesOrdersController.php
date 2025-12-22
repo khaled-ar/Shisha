@@ -14,8 +14,12 @@ class PartiesOrdersController extends Controller
      */
     public function index()
     {
-        $status = request('status') ?? "in_delivery";
-        return $this->generalResponse(request()->user()->parties_orders()->latest()->whereStatus($status)->get());
+        $status = request('status');
+        if($status) {
+            return $this->generalResponse(request()->user()->parties_orders()->latest()->whereStatus($status)->get());
+        }
+        return $this->generalResponse(request()->user()->parties_orders()->latest()->get());
+
     }
 
     /**
@@ -29,9 +33,9 @@ class PartiesOrdersController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(PartiesOrder $parties_order)
     {
-        //
+
     }
 
     /**
@@ -39,6 +43,12 @@ class PartiesOrdersController extends Controller
      */
     public function update(Request $request, PartiesOrder $parties_order)
     {
+        if($request->has('re_order') && $request->re_order == 1) {
+            $parties_order->forceFill(['status' => 'pending']);
+            $parties_order->save();
+            return $this->generalResponse(null);
+        }
+
         if($parties_order->status == 'pending') {
             $prices = Price::pluck('price', 'object')->toArray();
             $updated = [];
@@ -87,4 +97,5 @@ class PartiesOrdersController extends Controller
     {
         //
     }
+
 }
