@@ -26,6 +26,7 @@ class ProductsOrdersController extends Controller
         $first = $status == 'pending' ? null : ($orders[0] ?? null);
         $orders->makeHidden(['lon', 'lat', 'delivery_cost']);
         return $this->generalResponse([
+            'km_price' => Store::first()->km_price,
             'total' => $orders->sum('total'),
             'lon' => $first?->lon,
             'lat' => $first?->lat,

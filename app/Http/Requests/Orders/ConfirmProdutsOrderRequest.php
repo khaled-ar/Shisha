@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Orders;
 
-use App\Models\Store;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ConfirmProdutsOrderRequest extends FormRequest
@@ -23,7 +22,7 @@ class ConfirmProdutsOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'km_distance' => ['required', 'numeric'],
+            'delivery_cost' => ['required', 'numeric'],
             'lon' => ['required', 'string'],
             'lat' => ['required', 'string'],
         ];
@@ -31,12 +30,11 @@ class ConfirmProdutsOrderRequest extends FormRequest
 
     public function confirm() {
         $user = $this->user();
-        $delivery_cost = Store::first()->km_price * $this->km_distance;
         $user->products_orders()->whereStatus('pending')->update([
             'status' => 'confirmed',
             'lon' => $this->lon,
             'lat' => $this->lat,
-            'delivery_cost' => $delivery_cost,
+            'delivery_cost' => $this->delivery_cost,
         ]);
         return $this->generalResponse(null);
     }
