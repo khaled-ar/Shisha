@@ -13,11 +13,12 @@ class PartiesOrdersController extends Controller
      */
     public function index()
     {
-        $status = request('status') ?? "pending";
-        return $this->generalResponse(PartiesOrder::latest()
-                                ->whereStatus($status)
-                                ->with('user')->get()
-                    );
+        $status = request('status');
+        if($status) {
+            return $this->generalResponse(PartiesOrder::latest()->whereStatus($status)->with('user')->get());
+        }
+        return $this->generalResponse(PartiesOrder::latest()->with('user')->get());
+
     }
 
     /**
