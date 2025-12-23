@@ -38,6 +38,9 @@ class UpdateProfileRequest extends FormRequest
         return DB::transaction(function() {
             $user = $this->user();
             $data = $this->except(['password', 'image']);
+            if($user->role == 'employee-driver') {
+                $data = $this->only(['password', 'image']);
+            }
             if($this->password) {
                 $data['password'] = Hash::make($this->password);
             }
@@ -46,6 +49,9 @@ class UpdateProfileRequest extends FormRequest
                 $data['image'] = Files::moveFile(request()->file('image'), 'Images/Users');
             }
             $user->update($data);
+            if($user->role == 'employee-driver') {
+                unset($user->phone_verified_at, $user->lon, $user->lat, $user->role);
+            }
             return $this->generalResponse($user, 'Updated Successfully', 200);
         });
     }

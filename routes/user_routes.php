@@ -29,16 +29,14 @@ Route::get('parties-prices', function() {
     return response()->json(['message' => null, 'store_lon' => $store->lon, 'store_lat' => $store->lat, 'km_price' => $store->km_price, 'data' => Price::all()]);
 });
 
-Route::middleware('user')->group(function() {
-
-});
-
-Route::middleware(['auth:sanctum', 'user', 'whatsapp_verified'])->group(function() {
-
+Route::middleware('auth:sanctum')->group(function() {
     Route::controller(ProfileController::class)->group(function() {
         Route::get('profile', 'show');
         Route::post('profile', 'update');
     });
+});
+
+Route::middleware(['auth:sanctum', 'user', 'whatsapp_verified'])->group(function() {
 
     Route::apiResource('products-orders', ProductsOrdersController::class);
     Route::post('products-orders/confirm', [ProductsOrdersController::class, 'confirm']);
