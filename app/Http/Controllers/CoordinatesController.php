@@ -36,8 +36,13 @@ class CoordinatesController extends Controller
         return $this->generalResponse([
             'lon' => $coordinate->user->lon,
             'lat' => $coordinate->user->lat,
+            'image_url' => $coordinate->user->image_url,
+            'name' => $coordinate->user->name,
+            'phone' => $coordinate->user->phone,
         ]);
     }
+
+    
 
     /**
      * Update the specified resource in storage.
