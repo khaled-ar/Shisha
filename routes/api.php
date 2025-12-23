@@ -18,6 +18,9 @@ Route::middleware(['auth:sanctum', 'whatsapp_verified'])->group(function() use($
 
     Route::apiResource('coordinates', CoordinatesController::class);
 
+    // Driver Routes
+    include "{$base_path}/driver_routes.php";
+
     // Employee Products Routes
     include "{$base_path}/employee_products_routes.php";
 
