@@ -34,6 +34,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'employee_products' => \App\Http\Middleware\EmployeeProducts::class,
             'employee_parties' => \App\Http\Middleware\EmployeeParties::class,
             'user' => \App\Http\Middleware\User::class,
+            'driver' => \App\Http\Middleware\Driver::class,
             // 'lang' => \App\Http\Middleware\Lang::class,
             'whatsapp_verified' => \App\Http\Middleware\EnsureWhatsappIsVerified::class
         ]));

@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\Admin\StatisticsController;
+use App\Http\Controllers\CoordinatesController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use SebastianBergmann\CodeCoverage\Driver\Driver;
 
 $base_path = base_path('routes');
 
@@ -13,6 +15,8 @@ include "{$base_path}/auth.php";
 include "{$base_path}/user_routes.php";
 
 Route::middleware(['auth:sanctum', 'whatsapp_verified'])->group(function() use($base_path) {
+
+    Route::apiResource('coordinates', CoordinatesController::class);
 
     // Employee Products Routes
     include "{$base_path}/employee_products_routes.php";

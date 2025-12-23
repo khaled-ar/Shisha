@@ -12,7 +12,8 @@ class Employee extends Model
         'created_at',
         'updated_at',
         'front_id_image',
-        'back_id_image'
+        'back_id_image',
+        'work_status'
     ];
     protected $appends = [
         'back_id_image_url',
@@ -26,7 +27,7 @@ class Employee extends Model
 
     public function user() {
         return $this->belongsTo(User::class)->select([
-            'id', 'image', 'name', 'phone'
+            'id', 'image', 'name', 'phone', 'lon', 'lat'
         ]);
     }
 
