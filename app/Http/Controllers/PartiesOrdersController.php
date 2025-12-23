@@ -61,6 +61,13 @@ class PartiesOrdersController extends Controller
             if($request->persons) {
                 $updated['persons'] = $request->persons;
             }
+            if($request->delivery_cost) {
+                $updated['delivery_cost'] = $request->delivery_cost;
+            }
+            if($request->lon && $request->lat) {
+                $updated['lon'] = $request->lon;
+                $updated['lat'] = $request->lat;
+            }
             if($updated) {
                 if($parties_order->update($updated)) {
                     $parties_order->update(['total' => $prices['single_hookah'] * $parties_order->hookahs

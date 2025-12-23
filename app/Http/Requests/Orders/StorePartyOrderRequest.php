@@ -34,22 +34,20 @@ class StorePartyOrderRequest extends FormRequest
             'datetime' => ['required', 'string'],
             'lon' => ['required', 'string'],
             'lat' => ['required', 'string'],
-            'km_distance' => ['required', 'numeric']
+            'delivery_cost' => ['required', 'numeric']
         ];
     }
 
     public function store() {
 
-        $delivery_cost = Store::first()->km_price * $this->km_distance;
         $prices = Price::pluck('price', 'object')->toArray();
 
-        $order = PartiesOrder::create(array_merge($this->except('km_distance'), [
+        $order = PartiesOrder::create(array_merge($this->validated(), [
             'user_id' => $this->user()->id,
             'total' => $prices['single_hookah'] * $this->hookahs
                 + $prices['single_hour'] * $this->hours
                 + $prices['single_person'] * $this->persons
-                + $delivery_cost,
-            'delivery_cost' => $delivery_cost,
+                + $this->delivery_cost
             ])
         );
         return $this->generalResponse(null, '201', 201);

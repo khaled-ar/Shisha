@@ -26,7 +26,7 @@ Route::get('products', function() {
 
 Route::get('parties-prices', function() {
     $store = Store::first();
-    return response()->json(['message' => null, 'store_lon' => $store->lon, 'store_lat' => $store->lat, 'data' => Price::all()]);
+    return response()->json(['message' => null, 'store_lon' => $store->lon, 'store_lat' => $store->lat, 'km_price' => $store->km_price, 'data' => Price::all()]);
 });
 
 Route::middleware('user')->group(function() {
