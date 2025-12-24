@@ -60,6 +60,12 @@ class ProductsOrdersController extends Controller
      */
     public function update(Request $request, ProductsOrder $products_order)
     {
+        if($request->has('re_order') && $request->re_order == 1) {
+            $products_order->forceFill(['status' => 'pending']);
+            $products_order->save();
+            return $this->generalResponse(null);
+        }
+
         if($products_order->status == 'pending') {
             if($request->quantity) {
                 $quantity = $request->quantity;
