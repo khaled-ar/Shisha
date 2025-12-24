@@ -50,6 +50,7 @@ class StorePartyOrderRequest extends FormRequest
                 + $this->delivery_cost
             ])
         );
-        return $this->generalResponse(null, '201', 201);
+        $order->load('user');
+        return $this->generalResponse($order, '201', 201);
     }
 }
