@@ -16,6 +16,13 @@ Route::middleware('driver')->group(function() {
         ]);
     })
     ->name('driver.work_status');
+    Route::get('driver/get-work-status', function(Request $request) {
+        return response()->json([
+            'message' => null,
+            'data' => $request->user()->employee->work_status
+        ]);
+    })
+    ->name('driver.get.work_status');
 });
 
 
