@@ -4,6 +4,8 @@ namespace App\Http\Requests\Orders;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+use function Symfony\Component\Clock\now;
+
 class ConfirmProdutsOrderRequest extends FormRequest
 {
     /**
@@ -35,6 +37,7 @@ class ConfirmProdutsOrderRequest extends FormRequest
             'lon' => $this->lon,
             'lat' => $this->lat,
             'delivery_cost' => $this->delivery_cost,
+            'confirmed_at' => now(),
         ]);
         return $this->generalResponse(null);
     }

@@ -2,11 +2,12 @@
 
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\ProductsOrdersController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
-Route::middleware('driver')->group(function() {
-    Route::patch('driver/update-work-status', function(Request $request) {
+Route::middleware('driver')->prefix('driver')->group(function() {
+    Route::patch('update-work-status', function(Request $request) {
         $request->user()->employee()->update([
             'work_status' => $request->work_status
         ]);
@@ -16,13 +17,19 @@ Route::middleware('driver')->group(function() {
         ]);
     })
     ->name('driver.work_status');
-    Route::get('driver/get-work-status', function(Request $request) {
+    Route::get('get-work-status', function(Request $request) {
         return response()->json([
             'message' => null,
             'data' => $request->user()->employee->work_status
         ]);
     })
     ->name('driver.get.work_status');
+
+    Route::controller(ProductsOrdersController::class)->group(function() {
+        Route::get('available-products-orders', 'get_available_for_driver');
+        Route::get('get-user-orders-details', 'get_user_orders_details');
+        Route::patch('approve-user-orders', 'approve_user_orders');
+    });
 });
 
 
