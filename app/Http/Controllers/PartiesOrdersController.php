@@ -108,4 +108,22 @@ class PartiesOrdersController extends Controller
         //
     }
 
+    public function get_parties_orders() {
+        $status = request('status');
+        if(!$status) {
+            return $this->generalResponse(PartiesOrder::latest()->with('user')->whereHas('user')->get());
+        }
+        $parties_orders = PartiesOrder::whereStatus($status)->latest()->with('user')->whereHas('user');
+        if($status == 'canceled') {
+            $parties_orders = $parties_orders->get()->map(function($order) {
+                unset($order->user->lon, $order->user->lat);
+                unset($order->lon, $order->lat);
+                return $order;
+            });
+            return $this->generalResponse($parties_orders);
+        }
+        return $this->generalResponse($parties_orders->get());
+
+    }
+
 }
