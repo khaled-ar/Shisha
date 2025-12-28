@@ -76,7 +76,6 @@ class PartiesOrdersController extends Controller
                     $parties_order->update(['total' => $prices['single_hookah'] * $parties_order->hookahs
                         + $prices['single_hour'] * $parties_order->hours
                         + $prices['single_person'] * $parties_order->persons
-                        + $parties_order->delivery_cost
                     ]);
                 }
                 return $this->generalResponse(null, 'Updated Successfully');

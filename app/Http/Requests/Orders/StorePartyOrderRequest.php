@@ -47,7 +47,6 @@ class StorePartyOrderRequest extends FormRequest
             'total' => $prices['single_hookah'] * $this->hookahs
                 + $prices['single_hour'] * $this->hours
                 + $prices['single_person'] * $this->persons
-                + $this->delivery_cost
             ])
         );
         $order->load('user');
