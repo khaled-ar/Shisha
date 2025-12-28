@@ -120,6 +120,7 @@ class ProductsOrdersController extends Controller
         $products_orders = ProductsOrder::whereStatus('confirmed')
             ->with('user')
             ->whereHas('user')
+            ->whereHas('product')
             ->get()
             ->groupBy('user_id')
             ->map(function ($userOrders) use($store){
