@@ -193,7 +193,48 @@ class ProductsOrdersController extends Controller
     }
 
     public function my_orders() {
-        
+        $store = Store::first();
+        $products_orders = ProductsOrder::whereIn('status', ['delivered', 'in_delivery'])
+            ->whereHas('user')
+            ->whereHas('product')
+            ->whereEmployeeId(request()->user()->employee->id)
+            ->with(['user', 'product'])
+            ->orderByDesc('status')
+            ->get()
+            ->groupBy('user_id')
+            ->map(function ($userOrders) use($store){
+                $firstOrder = $userOrders->first();
+                $user = $firstOrder->user;
+
+                $totalSum = $userOrders->sum('total');
+
+                return [
+                    'user_id' => $user->id,
+                    'username' => $user->name,
+                    'image_url' => $user->image_url,
+                    'phone' => $user->phone,
+                    'store_lon' => $store->lon,
+                    'store_lat' => $store->lat,
+                    'products' => $userOrders->map(function($order) {
+                        return [
+                            'order_id' => $order->id,
+                            'status' => $order->status,
+                            'created_at' => $order->created_at,
+                            'product_title' => $order->product->title,
+                            'product_images' => $order->product->images_urls,
+                            'product_price' => $order->product->price,
+                            'quantity' => $order->quantity,
+                            'total' => $order->total,
+                            'delivery_cost' => $order->delivery_cost,
+                            'destination_lon' => $order->lon,
+                            'destination_lat' => $order->lat,
+                        ];
+                    }),
+                ];
+            })
+            ->values();
+
+        return $this->generalResponse($products_orders);
     }
 
     public function approve_user_orders() {
