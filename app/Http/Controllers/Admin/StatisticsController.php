@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\{
     Category,
     Employee,
+    PartiesOrder,
     Product,
+    ProductsOrder,
     User,
 };
 
@@ -24,6 +26,8 @@ class StatisticsController extends Controller
             'sup_categories'        => Category::whereNotNull('parent_id')->count(),
             'products'              => Product::count(),
             'users'                 => User::whereRole('user')->count(),
+            'products_orders_profits' => number_format(ProductsOrder::whereStatus('delivered')->sum('total')),
+            'parties_orders_profits' => number_format(PartiesOrder::whereStatus('delivered')->sum('total')),
         ]);
     }
 }
