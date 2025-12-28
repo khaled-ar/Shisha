@@ -199,4 +199,12 @@ class ProductsOrdersController extends Controller
             ->update(['employee_id' => request()->user()->employee->id, 'status' => 'in_delivery']);
         return $this->generalResponse(null);
     }
+
+    public function mark_orders_as_delivered() {
+        $user_id = request('user_id');
+        $products_orders = ProductsOrder::whereStatus('in_delivery')
+            ->whereUserId($user_id)
+            ->update(['status' => 'delivered']);
+        return $this->generalResponse(null);
+    }
 }
