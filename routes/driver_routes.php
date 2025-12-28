@@ -38,6 +38,7 @@ Route::middleware('driver')->prefix('driver')->group(function() {
     Route::controller(ProductsOrdersController::class)->group(function() {
         Route::get('available-products-orders', 'get_available_for_driver');
         Route::get('get-user-orders-details', 'get_user_orders_details');
+        Route::get('my-orders', 'my_orders');
         Route::patch('approve-user-orders', 'approve_user_orders');
         Route::patch('mark-orders-as-delivered', 'mark_orders_as_delivered');
     });

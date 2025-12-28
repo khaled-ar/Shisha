@@ -192,6 +192,10 @@ class ProductsOrdersController extends Controller
         return $this->generalResponse($products_orders);
     }
 
+    public function my_orders() {
+        
+    }
+
     public function approve_user_orders() {
         $user_id = request('user_id');
         $products_orders = ProductsOrder::whereStatus('confirmed')
