@@ -239,17 +239,27 @@ class ProductsOrdersController extends Controller
 
     public function approve_user_orders() {
         $user_id = request('user_id');
-        $products_orders = ProductsOrder::whereStatus('confirmed')
-            ->whereUserId($user_id)
-            ->update(['employee_id' => request()->user()->employee->id, 'status' => 'in_delivery']);
-        return $this->generalResponse(null);
+        $employee = request()->user()->employee;
+        return DB::transaction(function() use($employee, $user_id) {
+            $products_orders = ProductsOrder::whereStatus('confirmed')
+                ->whereUserId($user_id)
+                ->whereEmployeeId($employee->id)
+                ->update(['employee_id' => $employee->id, 'status' => 'in_delivery']);
+            $employee->update(['work_status' => 'inactive']);
+            return $this->generalResponse(null);
+        });
     }
 
     public function mark_orders_as_delivered() {
         $user_id = request('user_id');
-        $products_orders = ProductsOrder::whereStatus('in_delivery')
-            ->whereUserId($user_id)
-            ->update(['status' => 'delivered']);
-        return $this->generalResponse(null);
+        $employee = request()->user()->employee;
+        return DB::transaction(function() use($employee, $user_id) {
+            $products_orders = ProductsOrder::whereStatus('in_delivery')
+                ->whereUserId($user_id)
+                ->whereEmployeeId($employee->id)
+                ->update(['status' => 'delivered']);
+            $employee->update(['work_status' => 'active']);
+            return $this->generalResponse(null);
+        });
     }
 }
