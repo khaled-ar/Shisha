@@ -43,14 +43,19 @@ class PartiesOrdersController extends Controller
      */
     public function update(Request $request, PartiesOrder $parties_order)
     {
+        $prices = Price::pluck('price', 'object')->toArray();
+        $total = $prices['single_hookah'] * $parties_order->hookahs
+                        + $prices['single_hour'] * $parties_order->hours
+                        + $prices['single_person'] * $parties_order->persons;
+
         if($request->has('re_order') && $request->re_order == 1) {
-            $parties_order->forceFill(['status' => 'pending']);
+
+            $parties_order->forceFill(['status' => 'pending', 'total' => $total]);
             $parties_order->save();
             return $this->generalResponse(null);
         }
 
         if($parties_order->status == 'pending') {
-            $prices = Price::pluck('price', 'object')->toArray();
             $updated = [];
             if($request->hookahs) {
                 $updated['hookahs'] = $request->hookahs;
@@ -91,6 +96,7 @@ class PartiesOrdersController extends Controller
     public function confirm(Request $request, PartiesOrder $parties_order)
     {
         if($parties_order->status == 'pending') {
+
             $parties_order->forceFill(['status' => 'confirmed']);
             $parties_order->save();
             return $this->generalResponse(null);
