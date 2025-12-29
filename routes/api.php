@@ -38,6 +38,7 @@ Route::middleware(['auth:sanctum', 'whatsapp_verified'])->group(function() use($
         include "{$admin_path}/ads.php";
         include "{$admin_path}/prices.php";
         include "{$admin_path}/parties_orders.php";
+        include "{$admin_path}/products_orders.php";
         Route::get('statistics', [StatisticsController::class, 'index']);
     });
 });
