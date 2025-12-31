@@ -50,8 +50,12 @@ class PartiesOrdersController extends Controller
         $title = 'اشعار جديد';
         if($status == 'accepted') {
             $body = 'لقد تم الموافقة على طلب الحفلة الخاص بك، الرجاء الانتظار حتى يحين الموعد';
-        } else {
+        } elseif('rejected') {
             $body = 'للاسف، لقد تم رفض طلب الحفلة الخاص بك';
+        } elseif('in_delivery') {
+            $body = 'طلب الحفلة الخاص بك قيد التوصيل';
+        } elseif('canceled') {
+            $body = 'لقد تم الغاء طلب الحفلة الخاص بك';
         }
         $user = $parties_order->user;
         $user->notify(new FcmNotification($title, $body));
