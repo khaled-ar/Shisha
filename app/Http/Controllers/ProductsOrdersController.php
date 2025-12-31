@@ -245,8 +245,13 @@ class ProductsOrdersController extends Controller
         return DB::transaction(function() use($employee, $user_id) {
             $products_orders = ProductsOrder::whereStatus('confirmed')
                 ->whereUserId($user_id)
-                ->whereEmployeeId($employee->id)
-                ->update(['employee_id' => $employee->id, 'status' => 'in_delivery']);
+                ->get()
+                ->each(function($order) use($employee) {
+                    $order->forceFill([
+                        'employee_id' => $employee->id,
+                        'status' => 'in_delivery'
+                    ])->save();
+                });
             $employee->update(['work_status' => 'inactive']);
             return $this->generalResponse(null);
         });
@@ -259,7 +264,12 @@ class ProductsOrdersController extends Controller
             $products_orders = ProductsOrder::whereStatus('in_delivery')
                 ->whereUserId($user_id)
                 ->whereEmployeeId($employee->id)
-                ->update(['status' => 'delivered']);
+                ->get()
+                ->each(function($order) use($employee) {
+                    $order->forceFill([
+                        'status' => 'delivered'
+                    ])->save();
+                });
             $employee->update(['work_status' => 'active']);
             return $this->generalResponse(null);
         });
