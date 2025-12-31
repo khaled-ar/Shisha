@@ -2,8 +2,11 @@
 
 use App\Http\Controllers\Admin\StatisticsController;
 use App\Http\Controllers\CoordinatesController;
+use App\Models\User;
+use App\Notifications\FcmNotification;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 use SebastianBergmann\CodeCoverage\Driver\Driver;
 
 $base_path = base_path('routes');
@@ -40,5 +43,10 @@ Route::middleware(['auth:sanctum', 'whatsapp_verified'])->group(function() use($
         include "{$admin_path}/parties_orders.php";
         include "{$admin_path}/products_orders.php";
         Route::get('statistics', [StatisticsController::class, 'index']);
+        Route::post('send-notifications', function(Request $request) {
+            $to = $request->to;
+            Notification::send(User::whereRole($to)->get(), new FcmNotification($request->title, $request->body));
+            return response()->json(['message'=>null, 'data'=>null]);
+        });
     });
 });
