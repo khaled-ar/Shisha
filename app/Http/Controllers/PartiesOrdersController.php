@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Orders\StorePartyOrderRequest;
 use App\Models\PartiesOrder;
 use App\Models\Price;
+use App\Models\User;
+use App\Notifications\FcmNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 
 class PartiesOrdersController extends Controller
 {
@@ -99,6 +102,8 @@ class PartiesOrdersController extends Controller
 
             $parties_order->forceFill(['status' => 'confirmed']);
             $parties_order->save();
+            Notification::send(User::whereRole('employee-parties')->get(),
+                new FcmNotification('اشعار جديد', 'هناك طلب جديد، الرجاء الاطلاع'));
             return $this->generalResponse(null);
         }
         return $this->generalResponse(null, 'The order cannot be updated as it is in delivery.', 400);
