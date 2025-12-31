@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests\Orders;
 
+use App\Models\User;
+use App\Notifications\FcmNotification;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Notification;
 
 use function Symfony\Component\Clock\now;
 
@@ -39,6 +42,8 @@ class ConfirmProdutsOrderRequest extends FormRequest
             'delivery_cost' => $this->delivery_cost,
             'confirmed_at' => now(),
         ]);
+        Notification::send(User::whereRole('employee-driver')->get(),
+            new FcmNotification('اشعار جديد', 'هناك طلب جديد، الرجاء الاطلاع'));
         return $this->generalResponse(null);
     }
 }
