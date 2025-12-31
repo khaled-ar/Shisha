@@ -9,6 +9,7 @@ use App\Http\Requests\Orders\{
 };
 use App\Models\ProductsOrder;
 use App\Models\Store;
+use App\Notifications\FcmNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -252,7 +253,13 @@ class ProductsOrdersController extends Controller
                         'status' => 'in_delivery'
                     ])->save();
                 });
-            $employee->update(['work_status' => 'inactive']);
+            if(!empty($products_orders)) {
+                $employee->update(['work_status' => 'inactive']);
+                $title = 'اشعار جديد';
+                $body = 'الطلب الخاص بك قيد التوصيل';
+                $user = $products_orders->first()->user;
+                $user->notify(new FcmNotification($title, $body));
+            }
             return $this->generalResponse(null);
         });
     }
