@@ -165,7 +165,11 @@ class ProductsOrdersController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        ProductsOrder::whereUserId(request('user_id'))->whereStatus('in_delivery')->get()->map(function($order) {
+        $employee_user = null;
+        $products = ProductsOrder::whereUserId(request('user_id'))->whereStatus('in_delivery')->with('employee')->get()->map(function($order) use(&$employee_user){
+            if(!$employee_user) {
+                $employee_user = $order->employee->user;
+            }
             $order->forceFill([
                 'status' => 'canceled',
                 'employee_id' => null
@@ -176,6 +180,10 @@ class ProductsOrdersController extends Controller
         $title = 'اشعار جديد';
         $body = 'لقد تم الغاء الطلب الخاص بك';
         $user->notify(new FcmNotification($title, $body));
+        if($employee_user) {
+            $employee_user->employee->update(['work_status' => 'active']);
+            $employee_user->notify(new FcmNotification($title, 'لقد تم الغاء الطلب، الرجاء العودة الى المتجر'));
+        }
         return $this->generalResponse(null);
 
     }
