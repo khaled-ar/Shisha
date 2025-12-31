@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\PartiesOrder;
+use App\Notifications\FcmNotification;
 use Illuminate\Http\Request;
 
 class PartiesOrdersController extends Controller
@@ -46,7 +47,14 @@ class PartiesOrdersController extends Controller
         if($status == 'pending') {
             return $this->generalResponse(null, null, 400);
         }
-
+        $title = 'اشعار جديد';
+        if($status == 'accepted') {
+            $body = 'لقد تم الموافقة على طلب الحفلة الخاص بك، الرجاء الانتظار حتى يحين الموعد';
+        } else {
+            $body = 'للاسف، لقد تم رفض طلب الحفلة الخاص بك';
+        }
+        $user = $parties_order->user;
+        $user->notify(new FcmNotification($title, $body));
         $parties_order->forceFill(['status' => $status]);
         $parties_order->save();
         return $this->generalResponse(null);
