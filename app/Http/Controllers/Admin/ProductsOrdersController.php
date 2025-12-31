@@ -102,7 +102,7 @@ class ProductsOrdersController extends Controller
                 $products_orders = ProductsOrder::whereStatus($status)
                 ->whereHas('user')
                 ->whereHas('product')
-                ->with(['user', 'product'])
+                ->with(['user', 'product', 'employee'])
                 ->latest()
                 ->get()
                 ->groupBy('user_id')
@@ -118,6 +118,7 @@ class ProductsOrdersController extends Controller
                         'image_url' => $user->image_url,
                         'phone' => $user->phone,
                         'total' => $totalSum,
+                        'driver_id' => $firstOrder->employee->user->id,
                         'delivery_cost' => $firstOrder->delivery_cost,
                         'destination_lon' => $firstOrder->lon,
                         'destination_lat' => $firstOrder->lat,

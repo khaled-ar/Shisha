@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductsOrder extends Model
 {
-        protected $hidden = [
+    protected $hidden = [
         'updated_at',
     ];
 
@@ -24,5 +24,9 @@ class ProductsOrder extends Model
 
     public function getCreatedAtAttribute($value) {
         return \Carbon\Carbon::parse($value)->format('Y-m-d h:i');
+    }
+
+    public function employee() {
+        return $this->belongsTo(Employee::class)->with('user');
     }
 }
