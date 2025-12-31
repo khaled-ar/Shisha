@@ -5,6 +5,8 @@ use App\Http\Controllers\PartiesOrdersController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ProductsOrdersController;
 use App\Models\ProductsOrder;
+use App\Models\User;
+use App\Notifications\FcmNotification;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
@@ -45,6 +47,12 @@ Route::middleware('driver')->prefix('driver')->group(function() {
 
     Route::controller(PartiesOrdersController::class)->group(function() {
         Route::get('get-parties-orders', 'get_parties_orders');
+    });
+    Route::post('send-500m-notification/{user}', function(User $user) {
+        $title = 'اشعار جديد';
+        $body = 'لقد تبقى ما يقارب 500 لاستلام الطلب، استعد!';
+        $user->notify(new FcmNotification($title, $body));
+        return response()->json(['message' => null, 'data' => null]);
     });
 });
 
