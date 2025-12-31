@@ -48,6 +48,14 @@ class User extends Authenticatable
         ];
     }
 
+    /**
+     * Route notifications for the FCM channel.
+     */
+    public function routeNotificationForFcm($notification = null): ?string
+    {
+        return $this->fcm;
+    }
+
     public function employee() {
         return $this->hasOne(Employee::class);
     }
