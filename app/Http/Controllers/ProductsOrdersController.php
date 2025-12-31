@@ -253,7 +253,7 @@ class ProductsOrdersController extends Controller
                         'status' => 'in_delivery'
                     ])->save();
                 });
-            if(!empty($products_orders)) {
+            if(count($products_orders)) {
                 $employee->update(['work_status' => 'inactive']);
                 $title = 'اشعار جديد';
                 $body = 'الطلب الخاص بك قيد التوصيل';

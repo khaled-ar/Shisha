@@ -5,6 +5,7 @@ namespace App\Notifications;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Log;
 use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Firebase\Messaging\Notification as FirebaseNotification;
 
@@ -16,7 +17,8 @@ class FcmNotification extends Notification
         public string $title,
         public string $body,
         public array $data = [],
-    ) {}
+        ) {Log::info('fcm notification started...');}
+
 
     /**
      * Get the notification's delivery channels.
