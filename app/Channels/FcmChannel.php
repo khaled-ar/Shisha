@@ -14,8 +14,8 @@ class FcmChannel
      */
     public function send(object $notifiable, Notification $notification): void
     {
+        Log::info('FCM channel running...');
         $message = $notification->toFcm($notifiable);
-        Log::info('FCM notification running...');
 
         if (!$message) {
             Log::info('No message');

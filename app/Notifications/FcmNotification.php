@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Channels\FcmChannel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
@@ -25,7 +26,7 @@ class FcmNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['fcm'];
+        return [FcmChannel::class];
     }
 
     /**
