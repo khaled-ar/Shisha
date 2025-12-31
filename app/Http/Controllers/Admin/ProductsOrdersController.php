@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ProductsOrder;
 use App\Models\Store;
+use App\Models\User;
+use App\Notifications\FcmNotification;
 use Illuminate\Http\Request;
 
 class ProductsOrdersController extends Controller
@@ -170,6 +172,10 @@ class ProductsOrdersController extends Controller
             ]);
             $order->save();
         });
+        $user = User::whereId(request('user_id'))->first();
+        $title = 'اشعار جديد';
+        $body = 'لقد تم الغاء الطلب الخاص بك';
+        $user->notify(new FcmNotification($title, $body));
         return $this->generalResponse(null);
 
     }
