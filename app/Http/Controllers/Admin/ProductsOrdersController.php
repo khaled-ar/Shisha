@@ -162,7 +162,15 @@ class ProductsOrdersController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        ProductsOrder::whereUserId(request('user_id'))->whereStatus('in_delivery')->get()->map(function($order) {
+            $order->forceFill([
+                'status' => 'canceled',
+                'employee_id' => null
+            ]);
+            $order->save();
+        });
+        return $this->generalResponse(null);
+
     }
 
     /**
