@@ -63,6 +63,12 @@ class ProductsOrdersController extends Controller
     {
         if($request->has('re_order') && $request->re_order == 1) {
             $product = $products_order->product;
+            if($product->quantity < $products_order->quantity) {
+                return response()->json([
+                    'message' => "لا يمكن ان تكون كمية المنتج اكبر من {$product->quantity}",
+                    'data' => null
+                ], 400);
+            }
             $total = $product->price * $products_order->quantity;
             $products_order->forceFill(['status' => 'pending', 'confirmed_at' => null, 'total' => $total]);
             $products_order->save();
