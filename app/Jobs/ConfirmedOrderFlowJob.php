@@ -40,7 +40,8 @@ class ConfirmedOrderFlowJob implements ShouldQueue
             Log::info('❌ إلغاء الطلب #' . $order->id . ' - مضى عليه أكثر من 5 دقائق');
 
             // إلغاء الطلب
-            $order->update(['status' => 'canceled']);
+            $order->forceFill(['status' => 'canceled', 'confirmed_at' => null]);
+            $order->save();
 
             // إرسال إشعار للعميل فقط
             if ($order->user) {
