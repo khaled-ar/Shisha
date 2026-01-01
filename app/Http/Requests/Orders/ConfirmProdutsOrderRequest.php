@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Orders;
 
+use App\Models\Employee;
 use App\Models\User;
 use App\Notifications\FcmNotification;
 use Illuminate\Foundation\Http\FormRequest;
@@ -42,7 +43,12 @@ class ConfirmProdutsOrderRequest extends FormRequest
             'delivery_cost' => $this->delivery_cost,
             'confirmed_at' => now(),
         ]);
-        Notification::send(User::whereRole('employee-driver')->get(),
+        $users = [];
+        $available_drivers = Employee::whereWorkStatus('active')->with('user')->get()
+            ->map(function($driver) use(&$users){
+                $users[] = $driver->user;
+            });
+        Notification::send($users,
             new FcmNotification('اشعار جديد', 'هناك طلب جديد، الرجاء الاطلاع'));
         return $this->generalResponse(null);
     }
