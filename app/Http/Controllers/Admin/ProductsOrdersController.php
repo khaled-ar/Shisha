@@ -172,9 +172,12 @@ class ProductsOrdersController extends Controller
             }
             $order->forceFill([
                 'status' => 'canceled',
-                'employee_id' => null
+                'employee_id' => null,
+                'confirmed_at' => null
             ]);
             $order->save();
+            $order->product->increment('quantity', $order->quantity);
+            $order->product->save();
         });
         $user = User::whereId(request('user_id'))->first();
         $title = 'اشعار جديد';
