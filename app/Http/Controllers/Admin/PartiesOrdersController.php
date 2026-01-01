@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\PartiesOrder;
+use App\Models\User;
 use App\Notifications\FcmNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 
 class PartiesOrdersController extends Controller
 {
@@ -48,13 +50,26 @@ class PartiesOrdersController extends Controller
             return $this->generalResponse(null, null, 400);
         }
         $title = 'اشعار جديد';
+        $user = $request->user();
         if($status == 'accepted') {
+            if($user->role == 'employee-parties') {
+                Notification::send(User::whereRole('admin')->get(),
+                new FcmNotification('اشعار جديد', "لقد قام {$user->name} بالموافقة على طلب حفلة جديد"));
+            }
             $body = 'لقد تم الموافقة على طلب الحفلة الخاص بك، الرجاء الانتظار حتى يحين الموعد';
         } elseif('rejected') {
+            if($user->role == 'employee-parties') {
+                Notification::send(User::whereRole('admin')->get(),
+                new FcmNotification('اشعار جديد', "لقد قام {$user->name} برفض طلب حفلة جديد"));
+            }
             $body = 'للاسف، لقد تم رفض طلب الحفلة الخاص بك';
         } elseif('in_delivery') {
             $body = 'طلب الحفلة الخاص بك قيد التوصيل';
         } elseif('canceled') {
+            if($user->role == 'employee-parties') {
+                Notification::send(User::whereRole('admin')->get(),
+                    new FcmNotification('اشعار جديد', "لقد قام {$user->name} بالغاء طلب حفلة جديد"));
+            }
             $body = 'لقد تم الغاء طلب الحفلة الخاص بك';
         }
         $user = $parties_order->user;
