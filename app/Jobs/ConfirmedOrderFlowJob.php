@@ -86,7 +86,7 @@ class ConfirmedOrderFlowJob implements ShouldQueue
                     Notification::send(
                         $activeDrivers,
                         new FcmNotification(
-                            'اشعار جديد',
+                            'تذكير',
                             'هناك طلب جديد، الرجاء الاطلاع'
                         )
                     );

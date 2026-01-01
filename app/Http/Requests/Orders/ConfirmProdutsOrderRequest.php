@@ -43,12 +43,12 @@ class ConfirmProdutsOrderRequest extends FormRequest
             'delivery_cost' => $this->delivery_cost,
             'confirmed_at' => now(),
         ]);
-        $users = [];
-        $available_drivers = Employee::whereWorkStatus('active')->with('user')->get()
-            ->map(function($driver) use(&$users){
-                $users[] = $driver->user;
-            });
-        Notification::send($users,
+        $activeDrivers = Employee::where('work_status', 'active')
+            ->with('user')
+            ->get()
+            ->pluck('user')
+            ->filter();
+        Notification::send($activeDrivers,
             new FcmNotification('اشعار جديد', 'هناك طلب جديد، الرجاء الاطلاع'));
         return $this->generalResponse(null);
     }
