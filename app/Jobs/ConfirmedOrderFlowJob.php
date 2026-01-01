@@ -41,6 +41,9 @@ class ConfirmedOrderFlowJob implements ShouldQueue
 
             // إلغاء الطلب
             $order->forceFill(['status' => 'canceled', 'confirmed_at' => null]);
+            $order->product->increment('quantity', $order->quantity);
+            $order->product->save();
+
             $order->save();
 
             // إرسال إشعار للعميل فقط
