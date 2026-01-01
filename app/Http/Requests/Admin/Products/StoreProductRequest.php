@@ -3,8 +3,11 @@
 namespace App\Http\Requests\Admin\Products;
 
 use App\Models\Product;
+use App\Models\User;
+use App\Notifications\FcmNotification;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 
 class StoreProductRequest extends FormRequest
 {
@@ -37,6 +40,11 @@ class StoreProductRequest extends FormRequest
     public function store() {
         return DB::transaction(function() {
             Product::create($this->except('images'));
+            $user = $this->user();
+            if($user->role == 'employee-products') {
+                Notification::send(User::whereRole('admin')->get(),
+                    new FcmNotification('اشعار جديد', "لقد قام {$user->name} بإضافة منتج جديد، الرجاء الاطلاع"));
+            }
             return $this->generalResponse(null, '201', 201);
         });
     }
