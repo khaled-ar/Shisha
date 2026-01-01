@@ -3,8 +3,11 @@
 namespace App\Http\Requests\Admin\Products;
 
 use App\Models\Product;
+use App\Models\User;
+use App\Notifications\FcmNotification;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 
 class UpdateProductRequest extends FormRequest
 {
@@ -37,6 +40,11 @@ class UpdateProductRequest extends FormRequest
     public function update($product) {
         return DB::transaction(function() use($product) {
             $product->update($this->validated());
+            $user = $this->user();
+            if($user->role == 'employee-products') {
+                Notification::send(User::whereRole('admin')->get(),
+                    new FcmNotification('اشعار جديد', "لقد قام {$user->name} بتعديل المنتج رقم {$product->id}"));
+            }
             return $this->generalResponse(null, 'Updated Successfully', 200);
         });
     }
