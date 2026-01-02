@@ -44,10 +44,12 @@ class ConfirmProdutsOrderRequest extends FormRequest
             'confirmed_at' => now(),
         ]);
         $activeDrivers = Employee::where('work_status', 'active')
+            ->whereHas('user', function($query) {
+                $query->whereNotNull('fcm');
+            })
             ->with('user')
             ->get()
-            ->pluck('user')
-            ->filter();
+            ->pluck('user');
         Notification::send($activeDrivers,
             new FcmNotification('اشعار جديد', 'هناك طلب جديد، الرجاء الاطلاع'));
         return $this->generalResponse(null);
