@@ -79,21 +79,16 @@ class ConfirmedOrderFlowJob
                         $query->whereNotNull('fcm');
                     })
                     ->with('user')
-                    ->get()
-                    ->pluck('user');
+                    ->get();
 
                 $driversCount = $activeDrivers->count();
                 Log::info('🚗 عدد السائقين المتاحين: ' . $driversCount);
-                
+
                 // إرسال إشعار لجميع السائقين
                 if ($driversCount > 0) {
-                    Notification::send(
-                        $activeDrivers,
-                        new FcmNotification(
-                            'تذكير',
-                            'هناك طلب جديد، الرجاء الاطلاع'
-                        )
-                    );
+                    foreach($activeDrivers as $driver) {
+                        $driver->user->notify(new FcmNotification('تذكير', 'هناك طلب جديد، الرجاء الاطلاع'));
+                    }
                     Log::info('📤 تم إرسال إشعار لـ ' . $driversCount . ' سائق للطلب #' . $order->id);
                 } else {
                     Log::warning('⚠️ لا يوجد سائقين متاحين للطلب #' . $order->id);
