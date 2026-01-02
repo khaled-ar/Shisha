@@ -48,10 +48,11 @@ class ConfirmProdutsOrderRequest extends FormRequest
                 $query->whereNotNull('fcm');
             })
             ->with('user')
-            ->get()
-            ->pluck('user');
-        Notification::send($activeDrivers,
-            new FcmNotification('اشعار جديد', 'هناك طلب جديد، الرجاء الاطلاع'));
+            ->get();
+        foreach($activeDrivers as $driver) {
+            $driver->user->notify(new FcmNotification('اشعار جديد', 'هناك طلب جديد، الرجاء الاطلاع'));
+        }
+
         return $this->generalResponse(null);
     }
 }

@@ -27,7 +27,7 @@ class Employee extends Model
 
     public function user() {
         return $this->belongsTo(User::class)->select([
-            'id', 'image', 'name', 'phone', 'lon', 'lat'
+            'id', 'image', 'name', 'phone', 'lon', 'lat', 'fcm'
         ]);
     }
 

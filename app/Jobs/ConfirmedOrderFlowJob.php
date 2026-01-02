@@ -84,7 +84,7 @@ class ConfirmedOrderFlowJob
 
                 $driversCount = $activeDrivers->count();
                 Log::info('🚗 عدد السائقين المتاحين: ' . $driversCount);
-
+                
                 // إرسال إشعار لجميع السائقين
                 if ($driversCount > 0) {
                     Notification::send(
