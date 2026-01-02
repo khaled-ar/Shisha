@@ -10,10 +10,8 @@ use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
-class ConfirmedOrderFlowJob implements ShouldQueue
+class ConfirmedOrderFlowJob
 {
-    use Queueable;
-
     /**
      * Create a new job instance.
      */
@@ -77,10 +75,12 @@ class ConfirmedOrderFlowJob implements ShouldQueue
             if ($minutesPassed < 5) {
                 // الحصول على جميع السائقين المتاحين
                 $activeDrivers = Employee::where('work_status', 'active')
+                    ->whereHas('user', function($query) {
+                        $query->whereNotNull('fcm');
+                    })
                     ->with('user')
                     ->get()
-                    ->pluck('user')
-                    ->filter();
+                    ->pluck('user');
 
                 $driversCount = $activeDrivers->count();
                 Log::info('🚗 عدد السائقين المتاحين: ' . $driversCount);
