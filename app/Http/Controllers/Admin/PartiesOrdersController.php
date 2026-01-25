@@ -57,15 +57,15 @@ class PartiesOrdersController extends Controller
                 new FcmNotification('اشعار جديد', "لقد قام {$user->name} بالموافقة على طلب حفلة جديد"));
             }
             $body = 'لقد تم الموافقة على طلب الحفلة الخاص بك، الرجاء الانتظار حتى يحين الموعد';
-        } elseif('rejected') {
+        } elseif($status == 'rejected') {
             if($user->role == 'employee-parties') {
                 Notification::send(User::whereRole('admin')->get(),
                 new FcmNotification('اشعار جديد', "لقد قام {$user->name} برفض طلب حفلة جديد"));
             }
             $body = 'للاسف، لقد تم رفض طلب الحفلة الخاص بك';
-        } elseif('in_delivery') {
+        } elseif($status == 'in_delivery') {
             $body = 'طلب الحفلة الخاص بك قيد التوصيل';
-        } elseif('canceled') {
+        } elseif($status == 'canceled') {
             if($user->role == 'employee-parties') {
                 Notification::send(User::whereRole('admin')->get(),
                     new FcmNotification('اشعار جديد', "لقد قام {$user->name} بالغاء طلب حفلة جديد"));
