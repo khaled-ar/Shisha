@@ -50,7 +50,7 @@ Route::middleware('driver')->prefix('driver')->group(function() {
     });
     Route::post('send-500m-notification/{user}', function(User $user) {
         $title = 'اشعار جديد';
-        $body = 'لقد تبقى ما يقارب 500 لاستلام الطلب، استعد!';
+        $body = 'لم يتبقى الكثير، استعد لاستلام الطلب';
         $user->notify(new FcmNotification($title, $body));
         return response()->json(['message' => null, 'data' => null]);
     });
