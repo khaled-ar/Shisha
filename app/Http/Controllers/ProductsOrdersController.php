@@ -224,6 +224,8 @@ class ProductsOrdersController extends Controller
                     'phone' => $user->phone,
                     'store_lon' => $store->lon,
                     'store_lat' => $store->lat,
+                    'total' => $userOrders->where('status', 'in_delivery')->sum('total'),
+                    'delivery_cost' => $firstOrder->delivery_cost,
                     'products' => $userOrders->map(function($order) {
                         return [
                             'order_id' => $order->id,
@@ -234,7 +236,7 @@ class ProductsOrdersController extends Controller
                             'product_price' => $order->product->price,
                             'quantity' => $order->quantity,
                             'total' => $order->total,
-                            'delivery_cost' => $order->delivery_cost,
+                            // 'delivery_cost' => $order->delivery_cost,
                             'destination_lon' => $order->lon,
                             'destination_lat' => $order->lat,
                         ];
