@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Employee;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class CoordinatesController extends Controller
@@ -31,18 +32,18 @@ class CoordinatesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Employee $coordinate)
+    public function show(User $coordinate)
     {
         return $this->generalResponse([
-            'lon' => $coordinate->user->lon,
-            'lat' => $coordinate->user->lat,
-            'image_url' => $coordinate->user->image_url,
-            'name' => $coordinate->user->name,
-            'phone' => $coordinate->user->phone,
+            'lon' => $coordinate->lon,
+            'lat' => $coordinate->lat,
+            'image_url' => $coordinate->image_url,
+            'name' => $coordinate->name,
+            'phone' => $coordinate->phone,
         ]);
     }
 
-    
+
 
     /**
      * Update the specified resource in storage.

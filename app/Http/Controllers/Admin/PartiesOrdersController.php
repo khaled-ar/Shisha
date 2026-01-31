@@ -71,6 +71,8 @@ class PartiesOrdersController extends Controller
                     new FcmNotification('اشعار جديد', "لقد قام {$user->name} بالغاء طلب حفلة جديد"));
             }
             $body = 'لقد تم الغاء طلب الحفلة الخاص بك';
+        } elseif($status == 'delivered') {
+            $body = 'لقد تم تسليم طلب الحفلة الخاص بك';
         }
         $user = $parties_order->user;
         $user->notify(new FcmNotification($title, $body));
