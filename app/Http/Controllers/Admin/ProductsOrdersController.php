@@ -59,7 +59,7 @@ class ProductsOrdersController extends Controller
                 ->values();
 
             return $this->generalResponse($products_orders);
-        } elseif(request('driver_id')) {
+        } elseif(request('user_id')) {
             $products_orders = ProductsOrder::whereStatus($status)
                 ->whereUserId(request('user_id'))
                 ->whereHas('user')
@@ -120,7 +120,7 @@ class ProductsOrdersController extends Controller
                         'image_url' => $user->image_url,
                         'phone' => $user->phone,
                         'total' => $totalSum,
-                        'driver_id' => $firstOrder->employee->user->id,
+                        'driver_id' => $firstOrder->employee->user->id ?? null,
                         'delivery_cost' => $firstOrder->delivery_cost,
                         'destination_lon' => $firstOrder->lon,
                         'destination_lat' => $firstOrder->lat,
