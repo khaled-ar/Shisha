@@ -23,5 +23,6 @@ return [
     'You cannot book an appointment because you already have one. Please wait two days from the date of your current appointment.' => 'لا يمكن حجز موعد لانه لديك موعد بالفعل، يرجى الانتظار يومين من تاريخ حجز الموعد الحالي',
     'Editing is not possible while awaiting manager approval.' => 'لا يمكن التعديل في حالة انتظار الموافقة من المدير',
     'The order cannot be updated as it is in delivery.' => 'لا يمكن تحديث الطلب لانه قيد التوصيل',
-    'The quantity of the product cannot be greater than' => 'لا يمكن ان تكون كمية المنتج اكبر من'
+    'The quantity of the product cannot be greater than' => 'لا يمكن ان تكون كمية المنتج اكبر من',
+    'Order is not available.' => 'الطلب غير متاح'
 ];

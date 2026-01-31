@@ -23,5 +23,6 @@ return [
     'You cannot book an appointment because you already have one. Please wait two days from the date of your current appointment.' => 'You cannot book an appointment because you already have one. Please wait two days from the date of your current appointment.',
     'Editing is not possible while awaiting manager approval.' => 'Editing is not possible while awaiting manager approval.',
     'The order cannot be updated as it is in delivery.' => 'The order cannot be updated as it is in delivery.',
-    'The quantity of the product cannot be greater than' => 'The quantity of the product cannot be greater than'
+    'The quantity of the product cannot be greater than' => 'The quantity of the product cannot be greater than',
+    'Order is not available.' => 'Order is not available.'
 ];
