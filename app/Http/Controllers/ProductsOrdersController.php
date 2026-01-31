@@ -267,8 +267,9 @@ class ProductsOrdersController extends Controller
                 $body = 'الطلب الخاص بك قيد التوصيل';
                 $user = $products_orders->first()->user;
                 $user->notify(new FcmNotification($title, $body));
+                return $this->generalResponse(null);
             }
-            return $this->generalResponse(null);
+            return $this->generalResponse(null, 'Order is not available.', 404);
         });
     }
 
