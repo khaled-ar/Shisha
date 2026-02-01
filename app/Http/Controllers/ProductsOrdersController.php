@@ -23,21 +23,33 @@ class ProductsOrdersController extends Controller
         $user = request()->user();
         $store = Store::first();
         $status = request('status') ?? "pending";
+
         $orders = $user->products_orders()->whereStatus($status)->with('product')->get();
-        $first = $status == 'pending' ? null : ($orders[0] ?? null);
-        $orders->makeHidden(['lon', 'lat', 'delivery_cost']);
-        return $this->generalResponse([
-            'km_price' => Store::first()->km_price,
-            'total' => $orders->sum('total'),
-            'lon' => $first?->lon,
-            'lat' => $first?->lat,
-            'delivery_cost' => $first?->delivery_cost,
-            'user_lon' => $user->lon,
-            'user_lat' => $user->lat,
-            'store_lon' => $store->lon,
-            'store_lat' => $store->lat,
-            'orders' => $orders
-        ]);
+
+        $groupedOrders = $orders->groupBy(function ($order) {
+            return $order->lon . '|' . $order->lat;
+        });
+
+        $ordersByLocation = $groupedOrders->map(function ($locationOrders, $locationKey) use ($user, $store) {
+            $firstOrder = $locationOrders->first();
+            $locationOrders->makeHidden(['lon', 'lat', 'delivery_cost']);
+            [$lon, $lat] = explode('|', $locationKey);
+
+            return [
+                'km_price' => $store->km_price,
+                'total' => $locationOrders->sum('total'),
+                'lon' => $lon,
+                'lat' => $lat,
+                'delivery_cost' => $firstOrder->delivery_cost,
+                'user_lon' => $user->lon,
+                'user_lat' => $user->lat,
+                'store_lon' => $store->lon,
+                'store_lat' => $store->lat,
+                'orders' => $locationOrders,
+            ];
+        })->values();
+
+        return $this->generalResponse($ordersByLocation);
     }
 
     /**
@@ -61,9 +73,9 @@ class ProductsOrdersController extends Controller
      */
     public function update(Request $request, ProductsOrder $products_order)
     {
-        if($request->has('re_order') && $request->re_order == 1) {
+        if ($request->has('re_order') && $request->re_order == 1) {
             $product = $products_order->product;
-            if($product->quantity < $products_order->quantity) {
+            if ($product->quantity < $products_order->quantity) {
                 return response()->json([
                     'message' => "لا يمكن ان تكون كمية المنتج اكبر من {$product->quantity}",
                     'data' => null
@@ -75,28 +87,28 @@ class ProductsOrdersController extends Controller
             return $this->generalResponse(null);
         }
 
-        if($products_order->status == 'pending') {
-            if($request->quantity) {
+        if ($products_order->status == 'pending') {
+            if ($request->quantity) {
                 $quantity = $request->quantity;
                 $product = $products_order->product;
                 $available = $product->quantity + $products_order->quantity;
-                if($quantity - $products_order->quantity > $product->quantity) {
+                if ($quantity - $products_order->quantity > $product->quantity) {
                     return response()->json([
                         'message' => "لا يمكن ان تكون كمية المنتج اكبر من {$available}",
                         'data' => null
                     ], 400);
                 }
-                return DB::transaction(function() use($quantity, $products_order, $product){
-                    if($quantity > $products_order->quantity) {
+                return DB::transaction(function () use ($quantity, $products_order, $product) {
+                    if ($quantity > $products_order->quantity) {
                         $product->decrement('quantity', $quantity - $products_order->quantity);
-                    } elseif($quantity < $products_order->quantity) {
+                    } elseif ($quantity < $products_order->quantity) {
                         $product->increment('quantity', $products_order->quantity - $quantity);
                     }
                     $products_order->update(['quantity' => $quantity, 'total' => $product->price * $quantity]);
                     return $this->generalResponse(null, 'Updated Successfully');
                 });
             }
-            return DB::transaction(function() use($products_order) {
+            return DB::transaction(function () use ($products_order) {
                 $products_order->forceFill(['status' => 'canceled']);
                 $products_order->save();
                 $products_order->product->increment('quantity', $products_order->quantity);
@@ -120,9 +132,10 @@ class ProductsOrdersController extends Controller
     }
 
     // Driver Functions
-    public function get_available_for_driver() {
+    public function get_available_for_driver()
+    {
         $driver = request()->user()->employee;
-        if($driver->work_status != 'active') {
+        if ($driver->work_status != 'active') {
             return $this->generalResponse([]);
         }
         $store = Store::first();
@@ -132,7 +145,7 @@ class ProductsOrdersController extends Controller
             ->whereHas('product')
             ->get()
             ->groupBy('user_id')
-            ->map(function ($userOrders) use($store){
+            ->map(function ($userOrders) use ($store) {
                 $firstOrder = $userOrders->first();
                 $user = $firstOrder->user;
 
@@ -156,7 +169,8 @@ class ProductsOrdersController extends Controller
         return $this->generalResponse($products_orders);
     }
 
-    public function get_user_orders_details() {
+    public function get_user_orders_details()
+    {
         $user_id = request('user_id');
         $store = Store::first();
         $products_orders = ProductsOrder::whereStatus('confirmed')
@@ -167,7 +181,7 @@ class ProductsOrdersController extends Controller
             ->latest()
             ->get()
             ->groupBy('user_id')
-            ->map(function ($userOrders) use($store){
+            ->map(function ($userOrders) use ($store) {
                 $firstOrder = $userOrders->first();
                 $user = $firstOrder->user;
 
@@ -184,7 +198,7 @@ class ProductsOrdersController extends Controller
                     'destination_lat' => $firstOrder->lat,
                     'store_lon' => $store->lon,
                     'store_lat' => $store->lat,
-                    'products' => $userOrders->map(function($order) {
+                    'products' => $userOrders->map(function ($order) {
                         return [
                             'order_id' => $order->id,
                             'created_at' => $order->created_at,
@@ -201,7 +215,8 @@ class ProductsOrdersController extends Controller
         return $this->generalResponse($products_orders);
     }
 
-    public function my_orders() {
+    public function my_orders()
+    {
         $store = Store::first();
         $products_orders = ProductsOrder::whereIn('status', ['delivered', 'in_delivery'])
             ->whereHas('user')
@@ -211,7 +226,7 @@ class ProductsOrdersController extends Controller
             ->orderByDesc('status')
             ->get()
             ->groupBy('user_id')
-            ->map(function ($userOrders) use($store){
+            ->map(function ($userOrders) use ($store) {
                 $firstOrder = $userOrders->first();
                 $user = $firstOrder->user;
 
@@ -226,7 +241,7 @@ class ProductsOrdersController extends Controller
                     'store_lat' => $store->lat,
                     'total' => $userOrders->where('status', 'in_delivery')->sum('total'),
                     'delivery_cost' => $firstOrder->delivery_cost,
-                    'products' => $userOrders->map(function($order) {
+                    'products' => $userOrders->map(function ($order) {
                         return [
                             'order_id' => $order->id,
                             'status' => $order->status,
@@ -248,20 +263,21 @@ class ProductsOrdersController extends Controller
         return $this->generalResponse($products_orders);
     }
 
-    public function approve_user_orders() {
+    public function approve_user_orders()
+    {
         $user_id = request('user_id');
         $employee = request()->user()->employee;
-        return DB::transaction(function() use($employee, $user_id) {
+        return DB::transaction(function () use ($employee, $user_id) {
             $products_orders = ProductsOrder::whereStatus('confirmed')
                 ->whereUserId($user_id)
                 ->get()
-                ->each(function($order) use($employee) {
+                ->each(function ($order) use ($employee) {
                     $order->forceFill([
                         'employee_id' => $employee->id,
                         'status' => 'in_delivery'
                     ])->save();
                 });
-            if(count($products_orders)) {
+            if (count($products_orders)) {
                 $employee->update(['work_status' => 'inactive']);
                 $title = 'اشعار جديد';
                 $body = 'الطلب الخاص بك قيد التوصيل';
@@ -273,15 +289,16 @@ class ProductsOrdersController extends Controller
         });
     }
 
-    public function mark_orders_as_delivered() {
+    public function mark_orders_as_delivered()
+    {
         $user_id = request('user_id');
         $employee = request()->user()->employee;
-        return DB::transaction(function() use($employee, $user_id) {
+        return DB::transaction(function () use ($employee, $user_id) {
             $products_orders = ProductsOrder::whereStatus('in_delivery')
                 ->whereUserId($user_id)
                 ->whereEmployeeId($employee->id)
                 ->get()
-                ->each(function($order) use($employee) {
+                ->each(function ($order) use ($employee) {
                     $order->forceFill([
                         'status' => 'delivered'
                     ])->save();
